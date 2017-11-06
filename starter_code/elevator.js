@@ -1,34 +1,45 @@
 class Elevator {
-  constructor(){
+  constructor() {
     this.floor = 0;
     this.MAXFLOOR = 10;
     this.requests = [];
-    this.direction = 'static';
+    this.direction = 'idle';
     this.waitingList = [];
     this.passengers = [];
   }
 
   start() {
-    let liftInterval  = setInterval(() => {
+    let elevatorInterval = setInterval(() => {
       this.update();
     }, 1 * 1000);
   }
   stop() {
-    clearInterval(this.liftInterval);
+    clearInterval(this.elevatorInterval);
   }
   update() {
     this.log();
   }
-  _passengersEnter(person) {
-    this.passengers.push(person);
-    let indexToRemove = this.waitingList.indexOf(person);
-    this.waitingList.splice(indexToRemove, 1);
-    this.requests.push(person.destinationFloor);
-    console.log(`${person.name} has enter the elevator`);
+  _passengersEnter() {
+    if (this.requests.indexOf(this.floor) != -1) {
+        for (let p = 0; p < this.waitingList.length; p++) {
+          if (this.waitingList[p].originFloor == this.floor) {
+            this.passengers.push(this.waitingList[p]);
+            this.waitingList.splice(p, 1);
+            this.requests.push(this.waitingList[p].destinationFloor);
+            console.log(`${this.waitingList[p].name} has enter the elevator`);
+          }
+        }
+    }
   }
   _passengersLeave() {
-
-    
+    if (this.requests.indexOf(this.floor) != -1) {
+      for (let p = 0; p < this.passengers.length; p++) {
+        if (this.passengers[p].destinationFloor == this.floor) {
+          this.passengers.splice(p, 1);
+          console.log(`${this.passengers[p].name} has left the elevator`);
+        }
+      }
+    }
   }
   floorUp() {
     this.floor < 10 ? this.floor++ : this.floor;
@@ -43,11 +54,10 @@ class Elevator {
   log() {
     if (this.requests.length > 0 && this.requests[0] > this.floor) {
       this.direction = 'up';
-    }
-    else if (this.requests.length > 0 && this.requests[0] < this.floor) {
+    } else if (this.requests.length > 0 && this.requests[0] < this.floor) {
       this.direction = 'down';
     }
-    console.log(`Direction: ${direction} | Floor: ${this.floor}`);
+    console.log(`Direction: ${this.direction} | Floor: ${this.floor}`);
   }
 }
 
