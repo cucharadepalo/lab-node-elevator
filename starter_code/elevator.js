@@ -65,7 +65,7 @@ class Elevator {
     this.requests.push(person.originFloor);
   }
   log() {
-    console.log(`Direction: ${this.direction} | Floor: ${this.floor} | ${this.requests} | ${this.passengers.length}`);
+    console.log(`Direction: ${this.direction} | Floor: ${this.floor}`);
   }
 }
 
